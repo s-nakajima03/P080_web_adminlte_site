@@ -1,0 +1,41 @@
+■環境構築手順
+
+sudo apt install -y apache2 libapache2-mod-php mysql-server php php-mbstring php-gd php-xml php-bcmath php-ldap php-mysql vim firewalld net-tools libsnmp-perl fonts-mplus snmpd snmp libsnmp-dev snmptrapd gettext git curl
+
+curl -fsSL https://pkgs.tailscale.com/stable/ubuntu/jammy.noarmor.gpg | sudo tee /usr/share/keyrings/tailscale-archive-keyring.gpg >/dev/null
+curl -fsSL https://pkgs.tailscale.com/stable/ubuntu/jammy.tailscale-keyring.list | sudo tee /etc/apt/sources.list.d/tailscale.list
+
+sudo apt-get update
+sudo apt-get install tailscale
+
+sudo tailscale up
+tailscale ip -4
+
+git clone ssh://git@github.com/yoshiyakato/p080_web_adminlte_site.git
+mv /home/<username>/p080_web_adminlte_site /var/www/html/adminlte
+
+http://<ip_server>/adminlte/index.php
+
+■Xdebug
+$sudo apt install php-xdebug
+$sudo vi /etc/php/8.1/apache2/php.ini 
+; 下記は常時設定しておきます
+xdebug.mode = debug
+xdebug.client_host = 127.0.0.1
+xdebug.client_port = "9003"
+xdebug.idekey = "PHPSTORM"
+xdebug.start_with_request = yes
+xdebug.remote_log=/tmp/xdebug.log
+
+vscode側
+[実行]-[構成の追加]　の下記の部分に記述を追加
+    "launch": {
+        "configurations": [
+            {
+                "name": "Listen for Xdebug",
+                "type": "php",
+                "request": "launch",
+                "port": 9003
+            }
+        ]
+    }    
